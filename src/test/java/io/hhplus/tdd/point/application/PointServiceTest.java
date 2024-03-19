@@ -3,6 +3,8 @@ package io.hhplus.tdd.point.application;
 import io.hhplus.tdd.point.domain.PointHistory;
 import io.hhplus.tdd.point.domain.TransactionType;
 import io.hhplus.tdd.point.domain.UserPoint;
+import io.hhplus.tdd.point.error.InvalidAmountException;
+import io.hhplus.tdd.point.error.NotEnoughAmountException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -53,8 +55,8 @@ class PointServiceTest {
 
         //when & then
         assertThatThrownBy(() -> pointService.paymentProcess(userId, paymentAmount))
-                          .isInstanceOf(IllegalArgumentException.class)
-                        .hasMessageMatching("현재 잔고가 부족 합니다.");
+                          .isInstanceOf(NotEnoughAmountException.class)
+                        .hasMessageMatching(NotEnoughAmountException.EXCEPTION.getMessage());
 
     }
 
@@ -66,8 +68,8 @@ class PointServiceTest {
 
         //when & then
         assertThatThrownBy(() -> pointService.paymentProcess(userId, paymentTotal))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageMatching("충전 또는 결제 포인트는 0을 초과해야 합니다.");
+                .isInstanceOf(InvalidAmountException.class)
+                .hasMessageMatching(InvalidAmountException.EXCEPTION.getMessage());
 
     }
     @Test
@@ -96,8 +98,8 @@ class PointServiceTest {
 
         //when & then
         assertThatThrownBy(() -> pointService.chargeProcess(userId, chargeTotal))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageMatching("충전 또는 결제 포인트는 0을 초과해야 합니다.");
+                .isInstanceOf(InvalidAmountException.class)
+                .hasMessageMatching(InvalidAmountException.EXCEPTION.getMessage());
 
     }
 

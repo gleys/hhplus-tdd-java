@@ -1,5 +1,6 @@
 package io.hhplus.tdd.point.domain;
 
+import io.hhplus.tdd.point.error.NotEnoughAmountException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -17,8 +18,8 @@ class UserPointTest {
 
         //when & then
         assertThatThrownBy(() -> userPoint.pay(paymentTotal, currentTime))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageMatching("현재 잔고가 부족 합니다.");
+                .isInstanceOf(NotEnoughAmountException.class)
+                .hasMessageMatching(NotEnoughAmountException.EXCEPTION.getMessage());
     }
 
     @Test

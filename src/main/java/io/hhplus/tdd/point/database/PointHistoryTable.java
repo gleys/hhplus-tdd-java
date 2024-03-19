@@ -23,7 +23,7 @@ public class PointHistoryTable implements PointHistoryRepository {
             TransactionType transactionType,
             Long updateMillis
     ) throws InterruptedException {
-        Thread.sleep(Long.parseLong(String.valueOf(Math.random())) * 300L);
+        Thread.sleep(300L);
 
         PointHistory history = new PointHistory(cursor++, userId, transactionType, amount, updateMillis);
         table.add(history);

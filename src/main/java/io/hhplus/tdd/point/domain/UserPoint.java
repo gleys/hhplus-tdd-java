@@ -1,5 +1,7 @@
 package io.hhplus.tdd.point.domain;
 
+import io.hhplus.tdd.point.error.NotEnoughAmountException;
+
 import java.time.Instant;
 
 public record UserPoint(
@@ -11,7 +13,7 @@ public record UserPoint(
     public UserPoint pay(final long paymentTotal,
                          final long purchasedTime) {
         if (this.point() < paymentTotal) {
-            throw new IllegalArgumentException("현재 잔고가 부족 합니다.");
+            throw NotEnoughAmountException.EXCEPTION;
         }
         return new UserPoint(
                 this.id,

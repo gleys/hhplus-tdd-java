@@ -1,9 +1,13 @@
 package io.hhplus.tdd.point.application;
 
+import io.hhplus.tdd.point.domain.PointHistory;
 import io.hhplus.tdd.point.domain.TransactionType;
 import io.hhplus.tdd.point.domain.UserPoint;
+import io.hhplus.tdd.point.error.InvalidAmountException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -31,9 +35,17 @@ public class PointService {
 
     }
 
+    public UserPoint getUserPoint(final long userId) throws InterruptedException {
+        return this.userPointRepository.selectById(userId);
+    }
+
+    public List<PointHistory> getPointHistories(final long userId) throws InterruptedException {
+        return this.pointHistoryRepository.selectAllByUserId(userId);
+    }
+
     private void verifyAmount(final long amount) {
         if (amount <= 0) {
-            throw new IllegalArgumentException("충전 또는 결제 포인트는 0을 초과해야 합니다.");
+            throw InvalidAmountException.EXCEPTION;
         }
     }
 
