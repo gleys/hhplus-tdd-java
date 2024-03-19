@@ -13,6 +13,7 @@ public class PointService {
     private final PointHistoryRepository pointHistoryRepository;
     private final Timer timer;
     public UserPoint paymentProcess(final long userId, final long paymentTotal) throws InterruptedException {
+        this.verifyAmount(paymentTotal);
         UserPoint renewUserPoint = userPointRepository.selectById(userId)
                                       .pay(paymentTotal, timer.getCurrentTime());
 
@@ -20,6 +21,12 @@ public class PointService {
         return userPointRepository.insertOrUpdate(renewUserPoint.id(), renewUserPoint.point());
     }
 
+
+    private void verifyAmount(final long amount) {
+        if (amount <= 0) {
+            throw new IllegalArgumentException("충전 또는 결제 포인트는 0을 초과해야 합니다.");
+        }
+    }
 
 
 }

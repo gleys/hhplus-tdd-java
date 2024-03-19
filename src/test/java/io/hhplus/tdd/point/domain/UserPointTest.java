@@ -17,7 +17,8 @@ class UserPointTest {
 
         //when & then
         assertThatThrownBy(() -> userPoint.pay(paymentTotal, currentTime))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageMatching("현재 잔고가 부족 합니다.");
     }
 
     @Test

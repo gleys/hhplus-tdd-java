@@ -9,6 +9,10 @@ import java.util.Map;
 public class FakeUserPointRepository implements UserPointRepository {
     private Map<Long, UserPoint> table = new HashMap<>();
 
+    public FakeUserPointRepository(final Map<Long, UserPoint> table) {
+        this.table = table;
+    }
+
     @Override
     public UserPoint selectById(Long id) throws InterruptedException {
         UserPoint userPoint = table.get(id);
