@@ -3,7 +3,6 @@ package io.hhplus.tdd.point.application;
 import io.hhplus.tdd.point.domain.PointHistory;
 import io.hhplus.tdd.point.domain.TransactionType;
 import io.hhplus.tdd.point.domain.UserPoint;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,11 +16,9 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@ExtendWith(MockitoExtension.class)
 class PointServiceTest {
     @Mock
     private PointService pointService;
-    private UserPointRepository userPointRepository;
     private PointHistoryRepository pointHistoryRepository;
     private final FakeTimer timer = new FakeTimer();
     @BeforeEach
@@ -32,11 +29,11 @@ class PointServiceTest {
                     new UserPoint((long) i + 1, (long) i, System.currentTimeMillis()));
         }
 
-        this.userPointRepository = new FakeUserPointRepository(table);
+        UserPointRepository userPointRepository = new FakeUserPointRepository(table);
         this.pointHistoryRepository = new FakePointHistoryRepository();
 
         this.pointService =
-            new PointService(this.userPointRepository,
+            new PointService(userPointRepository,
                     this.pointHistoryRepository,
                     this.timer);
     }
@@ -86,10 +83,41 @@ class PointServiceTest {
         int size = renewedPointHistories.size() - 1;
 
         //then
+        assertThat(userPoint.point()).isEqualTo(1);
         assertThat(oldPointHistories.size()).isLessThan(renewedPointHistories.size());
         assertThat(renewedPointHistories.get(size).type()).isEqualTo(TransactionType.USE);
     }
 
+    @Test
+    void 충전_금액은_반드시_0_보다_커야_한다() {
+        //given
+        long userId = 5;
+        long chargeTotal = 0;
+
+        //when & then
+        assertThatThrownBy(() -> pointService.chargeProcess(userId, chargeTotal))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageMatching("충전 또는 결제 포인트는 0을 초과해야 합니다.");
+
+    }
+
+    @Test
+    void 충전_금액은_반드시_0_보다_크면_성공하고_기록을_남긴다() throws InterruptedException {
+        //given
+        long userId = 0;
+        long chargeTotal = 50;
+        List<PointHistory> oldPointHistories = this.pointHistoryRepository.selectAllByUserId(userId);
+
+        //when
+        UserPoint userPoint = pointService.chargeProcess(userId, chargeTotal);
+        List<PointHistory> renewedPointHistories = this.pointHistoryRepository.selectAllByUserId(userId);
+        int size = renewedPointHistories.size() - 1;
+
+        //then
+        assertThat(userPoint.point()).isEqualTo(50L);
+        assertThat(renewedPointHistories.size()).isGreaterThan(oldPointHistories.size());
+        assertThat(renewedPointHistories.get(size).type()).isEqualTo(TransactionType.CHARGE);
+    }
 
 
 }
