@@ -3,6 +3,9 @@ package io.hhplus.tdd.point.domain;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 class UserPointTest {
 
     @Test
@@ -13,7 +16,7 @@ class UserPointTest {
         long currentTime = 2L;
 
         //when & then
-        Assertions.assertThatThrownBy(() -> userPoint.pay(paymentTotal, currentTime))
+        assertThatThrownBy(() -> userPoint.pay(paymentTotal, currentTime))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -28,9 +31,9 @@ class UserPointTest {
         UserPoint renewUserPoint = userPoint.pay(paymentTotal, currentTime);
 
         //then
-        Assertions.assertThat(renewUserPoint.point()).isEqualTo(7);
-        Assertions.assertThat(renewUserPoint.updateMillis()).isEqualTo(currentTime);
-        Assertions.assertThat(renewUserPoint.id()).isEqualTo(1L);
+        assertThat(renewUserPoint.point()).isEqualTo(7);
+        assertThat(renewUserPoint.updateMillis()).isEqualTo(currentTime);
+        assertThat(renewUserPoint.id()).isEqualTo(1L);
     }
 
 }

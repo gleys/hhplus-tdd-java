@@ -1,15 +1,29 @@
 package io.hhplus.tdd.point.application;
 
-import io.hhplus.tdd.database.UserPointTable;
 import io.hhplus.tdd.point.domain.UserPoint;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class PointServiceTest {
-    private final PointService pointService =
-            new PointService(new FakeUserPointRepository(), new FakeTimer());
+    private PointService pointService;
+    @BeforeEach
+    void setup() {
+        this.pointService = new PointService(
+                new FakeUserPointRepository(),
+                new FakePointHistoryRepository(),
+                new FakeTimer());
+
+    }
+    @BeforeEach
+    void init() {
+        this.pointService =
+        new PointService(
+                new FakeUserPointRepository(),
+                new FakePointHistoryRepository(),
+                new FakeTimer());
+    }
 
     @Test
     void 잔고가_부족할_경우_포인트_사용은_실패한다() {

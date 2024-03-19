@@ -1,4 +1,6 @@
-package io.hhplus.tdd.point.domain;
+package io.hhplus.tdd.point.application;
+
+import io.hhplus.tdd.point.domain.UserPoint;
 
 public interface UserPointRepository {
     UserPoint selectById(Long id) throws InterruptedException;

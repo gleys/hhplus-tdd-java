@@ -18,4 +18,12 @@ public record UserPoint(
                 this.point - paymentTotal,
                 purchasedTime);
     }
+
+    public UserPoint charge(final long chargeTotal,
+                            final long purchasedTime) {
+        return new UserPoint(
+                this.id,
+                this.point + chargeTotal,
+                purchasedTime);
+    }
 }
